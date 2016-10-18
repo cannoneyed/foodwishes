@@ -1,5 +1,4 @@
 module.exports = {
-  geonames: {
-    username: process.env.GEONAMES_USERNAME,
-  },
+  API_KEY: process.env.API_KEY,
+  BLOG_ID: process.env.BLOG_ID,
 }

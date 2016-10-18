@@ -1,5 +1,4 @@
 require('dotenv').config()
-const appConfig = require('config')
 const autoprefixer = require('autoprefixer')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -14,23 +13,25 @@ const webpack = require('webpack')
 //---------------------------------------------------------
 const NODE_ENV = process.env.NODE_ENV
 
+const API_KEY = process.env.API_KEY
+const BLOG_ID = process.env.BLOG_ID
+
 const ENV_DEVELOPMENT = NODE_ENV === 'development'
 const ENV_PRODUCTION = NODE_ENV === 'production'
 const ENV_TEST = NODE_ENV === 'test'
 
-const FIREBASE_API_KEY = appConfig.firebaseConfig.apiKey
-const FIREBASE_AUTH_DOMAIN = appConfig.firebaseConfig.authDomain
-const FIREBASE_DATA_URL = appConfig.firebaseConfig.databaseURL
-const FIREBASE_STORAGE_BUCKET = appConfig.firebaseConfig.storageBucket
-
 const HOST = process.env.HOST || 'localhost'
 const PORT = process.env.PORT || 3000
-
 
 //=========================================================
 //  LOADERS
 //---------------------------------------------------------
+const urlLoaderLimit = 128000
 const loaders = {
+  json: {
+    test: /\.json$/,
+    loader: 'json-loader',
+  },
   js: {
     test: /\.js$/,
     exclude: /node_modules/,
@@ -38,18 +39,53 @@ const loaders = {
   },
   scss: {
     test: /\.scss$/,
-    loader: 'style!css!resolve-url!postcss-loader!sass',
+    loaders: [
+      'style?sourceMap',
+      'css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]',
+      'resolve-url',
+      'postcss-loader',
+      'sass',
+    ],
   },
   scssProd: {
     test: /\.scss$/,
-    loader: ExtractTextPlugin.extract('css!resolve-url!postcss-loader!sass')
+    loader: ExtractTextPlugin.extract('css?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!resolve-url!postcss-loader!sass')
   },
   img: {
     test: /\.(png|jpg|gif|svg)$/,
-    loader: 'url-loader?limit=8192',
-  }, // inline base64 URLs for <=8k images, direct URLs for the rest
-
+    loader: 'url-loader?limit=' + urlLoaderLimit,
+  },
+  ['font-woff']: {
+    test: /\.woff2?(\?\S*)?$/,
+    loader: 'url-loader?mimetype=application/font-woff&limit=' + urlLoaderLimit,
+  },
+  ['font-otf']: {
+    test: /\.otf(\?\S*)?$/,
+    loader: 'url-loader?limit=' + urlLoaderLimit,
+  },
+  ['font-eot']: {
+    test: /\.eot(\?\S*)?$/,
+    loader: 'url-loader?limit=' + urlLoaderLimit
+  },
+  ['font-ttf']: {
+    test: /\.ttf(\?\S*)?$/,
+    loader: 'url-loader?mimetype=application/octet-stream&limit=' + urlLoaderLimit
+  },
+  svg: {
+    test: /\.svg(\?\S*)?$/,
+    loader: 'url-loader?mimetype=image/svg+xml&limit=' + urlLoaderLimit
+  },
 }
+
+const sharedLoaders = [
+  'json',
+  'img',
+  'font-woff',
+  'font-otf',
+  'font-eot',
+  'font-ttf',
+  'svg'
+].map(key => loaders[key])
 
 
 //=========================================================
@@ -67,10 +103,8 @@ config.resolve = {
 config.plugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(NODE_ENV),
-    'process.env.FIREBASE_API_KEY': JSON.stringify(FIREBASE_API_KEY),
-    'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(FIREBASE_AUTH_DOMAIN),
-    'process.env.FIREBASE_DATA_URL': JSON.stringify(FIREBASE_DATA_URL),
-    'process.env.FIREBASE_STORAGE_BUCKET': JSON.stringify(FIREBASE_STORAGE_BUCKET),
+    'process.env.API_KEY': JSON.stringify(API_KEY),
+    'process.env.BLOG_ID': JSON.stringify(BLOG_ID),
   })
 ]
 
@@ -97,14 +131,10 @@ if (ENV_DEVELOPMENT || ENV_PRODUCTION) {
     vendor: [
       'babel-polyfill',
       'classnames',
-      'firebase',
       'history',
       'react',
       'react-dom',
-      'react-redux',
       'react-router',
-      'redux',
-      'redux-thunk'
     ]
   }
 
@@ -138,8 +168,7 @@ if (ENV_DEVELOPMENT) {
   )
 
   config.module = {
-    loaders: [
-      loaders.img,
+    loaders: sharedLoaders.concat([
       loaders.scss,
       {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader', query: {
         plugins: [
@@ -149,7 +178,7 @@ if (ENV_DEVELOPMENT) {
           ]
         ]
       }}
-    ]
+    ])
   }
 
   config.plugins.push(
@@ -183,11 +212,10 @@ if (ENV_DEVELOPMENT) {
 //-------------------------------------
 if (ENV_PRODUCTION) {
   config.module = {
-    loaders: [
+    loaders: sharedLoaders.concat([
       loaders.js,
-      loaders.img,
       loaders.scssProd,
-    ]
+    ])
   }
 
   config.plugins.push(

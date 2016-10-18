@@ -4,6 +4,9 @@
     "react",
     "stage-1"
   ],
-
-  "sourceRoot": "./src"
+  "sourceRoot": "./src",
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-class-properties",
+  ]
 }

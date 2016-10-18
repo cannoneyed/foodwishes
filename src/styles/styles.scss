@@ -1,38 +1,14 @@
-@import
-"settings",
-"mixins";
+@import "fonts";
 
-@import
-"~minx/src/settings",
-"~minx/src/functions",
-"~minx/src/mixins",
-"~minx/src/reset",
-"~minx/src/elements";
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Lato';
+  font-weight: 300;
+  box-sizing: border-box;
+}
 
-@import
-"grid",
-"about/about",
-"app/avatar",
-"app/backgrounds",
-"app/header",
-"app/fix-scroll",
-"app/footer",
-"app/sidebar",
-"app/main",
-"modals/modals",
-"connect/connect",
-"globe/globe",
-"graph/graph",
-"help/help",
-"journal/journal",
-"listen/listen",
-"loaders/loaders",
-"notifications/notifications",
-"ripple/ripple",
-"sign-in/sign-in",
-"tracks/tracks";
-
-
-.hide {
-  display: none !important;
+*, *:before, *:after {
+  box-sizing: inherit;
 }
