@@ -1,23 +1,27 @@
 import React from 'react'
 import { Provider } from 'mobx-react'
-import { Route, Router, useRouterHistory } from 'react-router'
-import { createHistory } from 'history'
+import { Route, Router, browserHistory } from 'react-router'
+import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 
 import store from 'src/core'
-const history = useRouterHistory(createHistory)({basename: '/'})
+
+const routingStore = new RouterStore()
+const history = syncHistoryWithStore(browserHistory, routingStore)
 
 import App from './App'
 import Recipes from './Recipes'
+import Recipe from './Recipe'
 
 // Initialize application data
 store.recipeStore.loadInitialData()
 
 export function Root() {
   return (
-    <Provider { ...store }>
-      <Router history={history}>
+    <Provider { ...store } routingStore={routingStore}>
+      <Router history={history} >
         <Route component={App} path="/">
           <Route component={Recipes} path="/recipes" />
+          <Route component={Recipe} path="/recipe/:id" />
         </Route>
       </Router>
     </Provider>

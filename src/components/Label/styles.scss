@@ -1,0 +1,13 @@
+@import '~src/styles/colors';
+
+.label {
+  height: 20px;
+  border-radius: 10px;
+  margin-left: 3px;
+  margin-top: 5px;
+  padding-top: 1px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  background-color: rgba($orange, 0.9);
+}

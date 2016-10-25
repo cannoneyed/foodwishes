@@ -1,37 +1,7 @@
-import apisauce from 'apisauce'
-import cheerio from 'cheerio'
 import _ from 'lodash'
+import cheerio from 'cheerio'
 
-import json from './dummy'
-import config from 'src/config'
-const { apiKey, blogId } = config
-
-const baseURL = `https://www.googleapis.com/blogger/v3/blogs/${blogId}`
-const api = apisauce.create({
-  baseURL,
-})
-
-api.addRequestTransform(request => {
-  request.params.key = apiKey
-  request.params.maxResults = 100
-  request.params.fetchImages = true
-})
-
-export default function getPosts() {
-  return Promise.resolve(json)
-    .then(res => {
-      return { data: res }
-    })
-  // return api.get('posts')
-    .then(res => {
-      return {
-        recipes: processPosts(res.data.items.slice(0, 20)),
-        nextPageToken: res.data.nextPageToken,
-      }
-    })
-}
-
-function processPosts(posts) {
+export function processPosts(posts) {
   return posts
     .filter(post => {
       const hasLabels = post.labels
@@ -162,5 +132,9 @@ function processParagraphs(lines) {
         mem.lines[n] = (mem.lines[n] || '') + ' ' + line
       }
       return mem
-    }, { lines: [], inTextBlock: true }).lines
+    }, { lines: [], inTextBlock: true })
+    .lines
+    .filter(line => {
+      return line.replace(/[^a-zA-Z0-9]+/, '').length > 0
+    })
 }

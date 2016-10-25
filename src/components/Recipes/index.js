@@ -10,14 +10,33 @@ class Recipes extends Component {
     recipeStore: PropTypes.object,
   }
 
+  constructor() {
+    super()
+    this.state = {
+      selectedRecipe: null,
+    }
+  }
+
+  selectRecipe = (id) => {
+    this.setState({ selectedRecipe: id })
+  }
+
   render() {
+    const { selectedRecipe } = this.state
     const { recipeStore } = this.props
     const { recipes } = recipeStore
 
     return (
       <div className={styles.recipesContainer}>
         { recipes.map(recipe => {
-          return <RecipeThumnbnail key={recipe.id} recipe={recipe} />
+          return (
+            <RecipeThumnbnail
+              key={recipe.id}
+              selected={recipe.id === selectedRecipe}
+              selectRecipe={this.selectRecipe}
+              recipe={recipe}
+            />
+          )
         })}
       </div>
     )

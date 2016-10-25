@@ -1,31 +1,54 @@
 import React, { Component, PropTypes } from 'react'
 import moment from 'moment'
+import classnames from 'classnames'
 
 import styles from './styles.scss'
-import processLabel from './processLabel'
+
+import Label from '../Label'
 
 const placeholder = require('src/img/placeholder.gif')
 
 class RecipeThumnbnail extends Component {
   static propTypes = {
     recipe: PropTypes.object,
+    selectRecipe: PropTypes.func.isRequired,
+    selected: PropTypes.bool,
   }
 
-  renderLabel = (label) => {
-    const { text } = processLabel(label)
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
 
-    const labelStyle = {
-      color: '#FFF',
-      // borderColor: '#FFF',
+  onClick = () => {
+    const { selected, selectRecipe } = this.props
+    const { id } = this.props.recipe
+    const { router } = this.context
+
+    if (selected) {
+      router.push(`/recipe/${id}`)
+    } else {
+      selectRecipe(id)
+    }
+  }
+
+  renderBackgroundImage = () => {
+    const { image } = this.props.recipe
+    // Define the background image for the thumbnail container
+    const backgroundImageStyle = {
+      backgroundImage: `url('${image}'), url('${placeholder}')`,
     }
 
+    const className = classnames(styles.backgroundImage, {
+      [styles.isSelected]: this.props.selected,
+    })
+
     return (
-      <span key={text} style={labelStyle} className={styles.label}>{text}</span>
+      <div style={backgroundImageStyle} className={className} />
     )
   }
 
-  render() {
-    const { image, labels, published, title } = this.props.recipe
+  renderDate = () => {
+    const { published } = this.props.recipe
 
     const publishedDate = new Date(published)
     let date = moment(publishedDate).format('MMM Do')
@@ -34,23 +57,26 @@ class RecipeThumnbnail extends Component {
       date += ', ' + moment(publishedDate).format('YYYY')
     }
 
-    // Define the background image for the thumbnail container
-    const backgroundImageStyle = {
-      backgroundImage: `url('${image}'), url('${placeholder}')`,
-    }
+    return date
+  }
+
+  render() {
+    const { labels, title } = this.props.recipe
 
     return (
-      <div className={styles.thumbnailContainer}>
-        <div style={backgroundImageStyle} className={styles.backgroundImage} />
+      <div className={styles.thumbnailContainer} onClick={this.onClick} >
+        { this.renderBackgroundImage() }
         <div className={styles.thumbnailContent}>
           <div className={styles.labelOverlay}>
-            { labels.map(label => this.renderLabel(label))}
+            { labels.map((label, index) => (
+              <Label key={index} label={label} />
+            )) }
           </div>
           <div className={styles.titleOverlay}>
             { title }
           </div>
           <div className={styles.dateOverlay}>
-            { date }
+            { this.renderDate() }
           </div>
         </div>
       </div>
