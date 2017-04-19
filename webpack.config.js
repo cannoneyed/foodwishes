@@ -140,7 +140,7 @@ if (ENV_DEVELOPMENT || ENV_PRODUCTION) {
 
   config.output = {
     filename: '[name].js',
-    path: path.resolve('./public'),
+    path: path.resolve('./www'),
     publicPath: '/'
   }
 
