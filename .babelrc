@@ -6,6 +6,7 @@
   ],
   "sourceRoot": "./src",
   "plugins": [
+    "transform-react-jsx-source",
     "transform-decorators-legacy",
     "transform-class-properties",
   ]
