@@ -15,12 +15,12 @@ const rootSelector = '.app-root'
 const appRoot = document.querySelector(rootSelector)
 ReactDOM.render(<Root />, appRoot)
 
-function selectReact (selector) {
+function selectReact(selector) {
   const elem = document.querySelector(selector)
   return window.findReact(elem)
 }
 
-function findReact (dom) {
+function findReact(dom) {
   for (let key in dom) {
     if (key.startsWith('__reactInternalInstance$')) {
       const compInternals = dom[key]._currentElement
@@ -48,27 +48,29 @@ window.traverseReactDOM = function() {
   const instances = new WeakMap()
   const components = {}
 
+  console.log('heyeyeyeye', rootSelector)
+
   // Traverse over each element, selecting the React component instance for the element and
   // processing it into a map of react components
-  map(all, element => {
-    const component = findReact(element)
-    const name = component.constructor.name
-    const { props, _source } = component
-    const { fileName } = _source
-
-    if (instances.has(component)) {
-      return
-    }
-    instances.set(component, true)
-
-    components[fileName] = components[fileName] || []
-    components[fileName].push({
-      name,
-      element,
-      props,
-      _source
-    })
-  })
+  // map(all, element => {
+  //   const component = findReact(element)
+  //   const name = component.constructor.name
+  //   const { props, _source } = component
+  //   const { fileName } = _source
+  //
+  //   if (instances.has(component)) {
+  //     return
+  //   }
+  //   instances.set(component, true)
+  //
+  //   components[fileName] = components[fileName] || []
+  //   components[fileName].push({
+  //     name,
+  //     element,
+  //     props,
+  //     _source
+  //   })
+  // })
 
   console.log('🐸', components)
 }
