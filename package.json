@@ -5,15 +5,19 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@material-ui/core": "latest",
+    "@material-ui/icons": "^3.0.2",
     "@types/react": "*",
     "@types/react-dom": "*",
+    "classnames": "^2.2.6",
     "react": "latest",
     "react-dom": "latest",
     "react-scripts": "latest"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.7",
     "@types/jest": "*",
     "@types/node": "*",
+    "prettier": "^1.16.4",
     "typescript": "latest"
   },
   "scripts": {
