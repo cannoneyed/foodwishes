@@ -3,24 +3,40 @@ import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import LocalDiningIcon from '@material-ui/icons/LocalDining';
 import withRoot from '../../withRoot';
+import { Recipe } from '../../core/recipe';
 
 const styles = {
   card: {
-    // maxWidth: 500,
+    maxWidth: 600,
+    width: '100%',
+    marginTop: 10,
+  },
+  chips: {
+    position: 'absolute' as 'absolute',
+    marginTop: -240,
+    width: '100%',
+    display: 'flex' as 'flex',
+    alignItems: 'center' as 'center',
+    justifyContent: 'flex-end' as 'flex-end',
+    flexWrap: 'wrap' as 'wrap',
+  },
+  chip: {
+    boxShadow: '5px 5px 10px rgba(0,0,0,0.5)',
+    transform: 'scale(0.9)',
+  },
+  title: {
+    fontSize: '1.2rem',
   },
   media: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
+    paddingTop: 250,
   },
   actions: {
     display: 'flex',
@@ -30,46 +46,58 @@ const styles = {
   },
 };
 
-export interface Props extends WithStyles<typeof styles> {}
+export interface Props extends WithStyles<typeof styles> {
+  recipe: Recipe;
+}
 
 class RecipeCard extends React.Component<Props, {}> {
+  formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  getCategory = (labels: string[]) => {
+    return <LocalDiningIcon />;
+  };
+
+  renderChips() {
+    const { classes, recipe } = this.props;
+    return (
+      <span className={classes.chips}>
+        {recipe.labels.map(label => {
+          return <Chip color="primary" className={classes.chip} key={label} label={label} />;
+        })}
+      </span>
+    );
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, recipe } = this.props;
     return (
       <Card className={classes.card}>
         <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-            </Avatar>
-          }
           action={
-            <IconButton>
-              <MoreVertIcon />
+            <IconButton aria-label="Add to favorites">
+              <FavoriteIcon />
             </IconButton>
           }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
+          title={recipe.title}
+          titleTypographyProps={{
+            classes: {
+              h5: classes.title,
+            },
+          }}
+          subheader={this.formatDate(recipe.published)}
         />
-        <CardMedia
-          className={classes.media}
-          image="/static/images/cards/paella.jpg"
-          title="Paella dish"
-        />
-        <CardContent>
-          <Typography component="p">
-            This impressive paella is a perfect party dish and a fun meal to cook together with your
-            guests. Add 1 cup of frozen peas along with the mussels, if you like.
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
-        </CardActions>
+        <CardActionArea>
+          <CardMedia
+            onClick={() => console.log('FUCK YOU')}
+            className={classes.media}
+            image={recipe.image}
+            title={recipe.title}
+          >
+            {this.renderChips()}
+          </CardMedia>
+        </CardActionArea>
       </Card>
     );
   }
