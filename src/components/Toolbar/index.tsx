@@ -19,18 +19,25 @@ const styles = {
   },
 };
 
-export interface Props extends WithStyles<typeof styles> {}
+export interface Props extends WithStyles<typeof styles> {
+  onMenuClick: () => void;
+}
 
 class ToolbarComponent extends React.Component<Props, {}> {
   render() {
-    const { classes } = this.props;
+    const { classes, onMenuClick } = this.props;
     return (
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
             Food Wishes
           </Typography>
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+          <IconButton
+            className={classes.menuButton}
+            onClick={onMenuClick}
+            color="inherit"
+            aria-label="Menu"
+          >
             <MenuIcon />
           </IconButton>
         </Toolbar>

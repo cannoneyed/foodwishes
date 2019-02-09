@@ -1,5 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Home from './pages/Home';
+import Recipe from './pages/Recipe';
 
-ReactDOM.render(<Home />, document.querySelector('#root'));
+ReactDOM.render(<Recipe />, document.querySelector('#root'));

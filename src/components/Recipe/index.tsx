@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -19,13 +24,15 @@ const styles = {
     width: '100%',
     marginTop: 10,
   },
+  header: {
+    paddingBottom: 0,
+  },
   chips: {
-    position: 'absolute' as 'absolute',
-    marginTop: -240,
+    marginBottom: 20,
+    marginLeft: -5,
     width: '100%',
     display: 'flex' as 'flex',
     alignItems: 'center' as 'center',
-    justifyContent: 'flex-end' as 'flex-end',
     flexWrap: 'wrap' as 'wrap',
   },
   chip: {
@@ -35,15 +42,12 @@ const styles = {
   title: {
     fontSize: '1.1rem',
   },
-  media: {
-    height: 0,
-    paddingTop: 250,
-  },
   actions: {
     display: 'flex',
   },
-  avatar: {
-    backgroundColor: red[500],
+  listItem: {
+    paddingLeft: 0,
+    paddingRight: 0,
   },
 };
 
@@ -51,13 +55,9 @@ export interface Props extends WithStyles<typeof styles> {
   recipe: Recipe;
 }
 
-class RecipeCard extends React.Component<Props, {}> {
+class FullRecipe extends React.Component<Props, {}> {
   formatDate = (date: Date) => {
     return date.toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
-
-  getCategory = (labels: string[]) => {
-    return <LocalDiningIcon />;
   };
 
   renderTitle = (title: string) => {
@@ -79,11 +79,26 @@ class RecipeCard extends React.Component<Props, {}> {
     );
   }
 
+  renderVideo() {
+    const { recipe } = this.props;
+    return (
+      <iframe
+        width="560"
+        height="315"
+        src={`${recipe.videoSrc}?rel=0`}
+        allow="autoplay; encrypted-media"
+        frameBorder="0"
+        allowFullScreen
+      />
+    );
+  }
+
   render() {
     const { classes, recipe } = this.props;
     return (
       <Card className={classes.card}>
         <CardHeader
+          className={classes.header}
           action={
             <IconButton aria-label="Add to favorites">
               <FavoriteIcon />
@@ -92,19 +107,28 @@ class RecipeCard extends React.Component<Props, {}> {
           title={this.renderTitle(recipe.title)}
           subheader={this.formatDate(recipe.published)}
         />
-        <CardActionArea>
-          <CardMedia
-            onClick={() => console.log('FUCK YOU')}
-            className={classes.media}
-            image={recipe.image}
-            title={recipe.title}
-          >
-            {this.renderChips()}
-          </CardMedia>
-        </CardActionArea>
+        <CardContent>
+          {this.renderChips()}
+          {this.renderVideo()}
+        </CardContent>
+        <CardContent>
+          {recipe.description.map((section, index) => (
+            <Typography key={index} paragraph>
+              {section}
+            </Typography>
+          ))}
+          <Divider />
+          <List dense>
+            {recipe.directions.map((direction, index) => (
+              <ListItem className={classes.listItem} key={index}>
+                <ListItemText>{direction}</ListItemText>
+              </ListItem>
+            ))}
+          </List>
+        </CardContent>
       </Card>
     );
   }
 }
 
-export default withRoot(withStyles(styles)(RecipeCard));
+export default withRoot(withStyles(styles)(FullRecipe));
