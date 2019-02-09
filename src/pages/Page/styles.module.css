@@ -1,0 +1,9 @@
+.root {
+  flex-grow: 1;
+}
+
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}

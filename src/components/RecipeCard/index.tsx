@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import { withRouter, RouteComponentProps } from 'react-router';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -8,47 +7,14 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
-import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocalDiningIcon from '@material-ui/icons/LocalDining';
 import withRoot from '../../withRoot';
 import { Recipe } from '../../core/recipe';
 
-const styles = {
-  card: {
-    maxWidth: 600,
-    width: '100%',
-    marginTop: 10,
-  },
-  chips: {
-    position: 'absolute' as 'absolute',
-    marginTop: -240,
-    width: '100%',
-    display: 'flex' as 'flex',
-    alignItems: 'center' as 'center',
-    justifyContent: 'flex-end' as 'flex-end',
-    flexWrap: 'wrap' as 'wrap',
-  },
-  chip: {
-    boxShadow: '5px 5px 10px rgba(0,0,0,0.5)',
-    transform: 'scale(0.9)',
-  },
-  title: {
-    fontSize: '1.1rem',
-  },
-  media: {
-    height: 0,
-    paddingTop: 250,
-  },
-  actions: {
-    display: 'flex',
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-};
+import styles from './styles.module.css';
 
-export interface Props extends WithStyles<typeof styles>, RouteComponentProps {
+export interface Props extends RouteComponentProps {
   recipe: Recipe;
 }
 
@@ -67,16 +33,16 @@ class RecipeCard extends React.Component<Props, {}> {
 
   renderTitle = (title: string) => {
     return (
-      <Typography variant="h6" classes={{ h6: this.props.classes.title }}>
+      <Typography variant="h6" classes={{ h6: styles.title }}>
         {title}
       </Typography>
     );
   };
 
   renderChips() {
-    const { classes, recipe } = this.props;
+    const { recipe } = this.props;
     return (
-      <span className={classes.chips}>
+      <span className={styles.chips}>
         {recipe.labels.map(label => {
           const handleChipClick = (event: React.MouseEvent) => {
             event.stopPropagation();
@@ -86,7 +52,7 @@ class RecipeCard extends React.Component<Props, {}> {
             <Chip
               onClick={handleChipClick}
               color="primary"
-              className={classes.chip}
+              className={styles.chip}
               key={label}
               label={label}
             />
@@ -97,9 +63,10 @@ class RecipeCard extends React.Component<Props, {}> {
   }
 
   render() {
-    const { classes, recipe } = this.props;
+    const { recipe } = this.props;
+
     return (
-      <Card className={classes.card}>
+      <Card className={styles.card}>
         <CardHeader
           action={
             <IconButton aria-label="Add to favorites">
@@ -112,7 +79,7 @@ class RecipeCard extends React.Component<Props, {}> {
         <CardActionArea>
           <CardMedia
             onClick={this.navigateTo(`/recipe/${recipe.id}`)}
-            className={classes.media}
+            className={styles.media}
             image={recipe.image}
             title={recipe.title}
           >
@@ -124,4 +91,4 @@ class RecipeCard extends React.Component<Props, {}> {
   }
 }
 
-export default withRouter(withRoot(withStyles(styles)(RecipeCard)));
+export default withRouter(withRoot(RecipeCard));

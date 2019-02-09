@@ -1,27 +1,25 @@
 import * as React from 'react';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import withRoot from '../../withRoot';
+import { getRecipes } from '../../core/api';
 
 import { Recipe } from '../../core/recipe';
 import RecipeCard from '../../components/RecipeCard';
 
-const styles = {
-  container: {
-    alignItems: 'center' as 'center',
-    display: 'flex' as 'flex',
-    flexDirection: 'column' as 'column',
-  },
-};
+import styles from './styles.module.css';
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   recipes: Recipe[];
 }
 
 class RecipeList extends React.Component<Props, {}> {
+  componentDidMount() {
+    getRecipes().then(recipes => console.log('🌶', recipes));
+  }
+
   render() {
-    const { recipes, classes } = this.props;
+    const { recipes } = this.props;
     return (
-      <div className={classes.container}>
+      <div className={styles.container}>
         {recipes.map(recipe => (
           <RecipeCard key={recipe.id} recipe={recipe} />
         ))}
@@ -30,4 +28,4 @@ class RecipeList extends React.Component<Props, {}> {
   }
 }
 
-export default withRoot(withStyles(styles)(RecipeList));
+export default withRoot(RecipeList);

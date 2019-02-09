@@ -1,0 +1,12 @@
+.root {
+  flex-grow: 1;
+}
+
+.left {
+  align-items: center;
+  flex-grow: 1;
+}
+
+.menuButton {
+  margin-right: 0;
+}

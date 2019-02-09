@@ -1,23 +1,13 @@
 import * as React from 'react';
 import Drawer from '@material-ui/core/Drawer';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 
 import DrawerContents from '../../components/Drawer';
 import Toolbar from '../../components/Toolbar';
 import withRoot from '../../withRoot';
 
-const styles = {
-  root: {
-    flexGrow: 1,
-  },
-  container: {
-    alignItems: 'center' as 'center',
-    display: 'flex' as 'flex',
-    flexDirection: 'column' as 'column',
-  },
-};
+import styles from './styles.module.css';
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   children: React.ReactNode;
 }
 export interface State {
@@ -34,11 +24,11 @@ class PageWrapper extends React.Component<Props, State> {
   };
 
   render() {
-    const { classes, children } = this.props;
+    const { children } = this.props;
     return (
-      <div className={classes.root}>
+      <div className={styles.root}>
         <Toolbar onMenuClick={() => this.toggleDrawer(true)} />
-        <div className={classes.container}>{children}</div>
+        <div className={styles.container}>{children}</div>
         <Drawer
           anchor="right"
           open={this.state.drawerOpen}
@@ -54,4 +44,4 @@ class PageWrapper extends React.Component<Props, State> {
   }
 }
 
-export default withRoot(withStyles(styles)(PageWrapper));
+export default withRoot(PageWrapper);

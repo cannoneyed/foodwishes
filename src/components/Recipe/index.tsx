@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
@@ -12,46 +9,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocalDiningIcon from '@material-ui/icons/LocalDining';
 import withRoot from '../../withRoot';
 import { Recipe } from '../../core/recipe';
 
-const styles = {
-  card: {
-    maxWidth: 600,
-    width: '100%',
-    marginTop: 10,
-  },
-  header: {
-    paddingBottom: 0,
-  },
-  chips: {
-    marginBottom: 20,
-    marginLeft: -5,
-    width: '100%',
-    display: 'flex' as 'flex',
-    alignItems: 'center' as 'center',
-    flexWrap: 'wrap' as 'wrap',
-  },
-  chip: {
-    boxShadow: '5px 5px 10px rgba(0,0,0,0.5)',
-    transform: 'scale(0.9)',
-  },
-  title: {
-    fontSize: '1.1rem',
-  },
-  actions: {
-    display: 'flex',
-  },
-  listItem: {
-    paddingLeft: 0,
-    paddingRight: 0,
-  },
-};
+import styles from './styles.module.css';
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   recipe: Recipe;
 }
 
@@ -62,18 +26,18 @@ class FullRecipe extends React.Component<Props, {}> {
 
   renderTitle = (title: string) => {
     return (
-      <Typography variant="h6" classes={{ h6: this.props.classes.title }}>
+      <Typography variant="h6" classes={{ h6: styles.title }}>
         {title}
       </Typography>
     );
   };
 
   renderChips() {
-    const { classes, recipe } = this.props;
+    const { recipe } = this.props;
     return (
-      <span className={classes.chips}>
+      <span className={styles.chips}>
         {recipe.labels.map(label => {
-          return <Chip color="primary" className={classes.chip} key={label} label={label} />;
+          return <Chip color="primary" className={styles.chip} key={label} label={label} />;
         })}
       </span>
     );
@@ -94,11 +58,11 @@ class FullRecipe extends React.Component<Props, {}> {
   }
 
   render() {
-    const { classes, recipe } = this.props;
+    const { recipe } = this.props;
     return (
-      <Card className={classes.card}>
+      <Card className={styles.card}>
         <CardHeader
-          className={classes.header}
+          className={styles.header}
           action={
             <IconButton aria-label="Add to favorites">
               <FavoriteIcon />
@@ -120,7 +84,7 @@ class FullRecipe extends React.Component<Props, {}> {
           <Divider />
           <List dense>
             {recipe.directions.map((direction, index) => (
-              <ListItem className={classes.listItem} key={index}>
+              <ListItem className={styles.listItem} key={index}>
                 <ListItemText>{direction}</ListItemText>
               </ListItem>
             ))}
@@ -131,4 +95,4 @@ class FullRecipe extends React.Component<Props, {}> {
   }
 }
 
-export default withRoot(withStyles(styles)(FullRecipe));
+export default withRoot(FullRecipe);
