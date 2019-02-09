@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -50,8 +51,22 @@ const styles = {
 export interface Props extends WithStyles<typeof styles> {
   recipe: Recipe;
 }
+export interface State {
+  redirectTarget: string | null;
+}
 
 class RecipeCard extends React.Component<Props, {}> {
+  state: State = {
+    redirectTarget: null,
+  };
+
+  navigateToRecipe() {
+    const { id } = this.props.recipe;
+    const redirectTarget = `/recipe/${id}`;
+    console.log(redirectTarget);
+    this.setState({ redirectTarget });
+  }
+
   formatDate = (date: Date) => {
     return date.toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' });
   };
@@ -80,6 +95,10 @@ class RecipeCard extends React.Component<Props, {}> {
   }
 
   render() {
+    if (this.state.redirectTarget) {
+      return <Redirect to={this.state.redirectTarget} push />;
+    }
+
     const { classes, recipe } = this.props;
     return (
       <Card className={classes.card}>
@@ -94,7 +113,7 @@ class RecipeCard extends React.Component<Props, {}> {
         />
         <CardActionArea>
           <CardMedia
-            onClick={() => console.log('FUCK YOU')}
+            onClick={() => this.navigateToRecipe()}
             className={classes.media}
             image={recipe.image}
             title={recipe.title}

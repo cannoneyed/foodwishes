@@ -42,7 +42,10 @@ class PageWrapper extends React.Component<Props, State> {
         <Drawer
           anchor="right"
           open={this.state.drawerOpen}
-          onClose={() => this.toggleDrawer(false)}
+          onClose={() => {
+            console.log('close');
+            this.toggleDrawer(false);
+          }}
         >
           <DrawerContents />
         </Drawer>

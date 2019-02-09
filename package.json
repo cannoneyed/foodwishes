@@ -11,12 +11,15 @@
     "classnames": "^2.2.6",
     "react": "latest",
     "react-dom": "latest",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "latest"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.7",
     "@types/jest": "*",
     "@types/node": "*",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/router5": "^5.0.0",
     "prettier": "^1.16.4",
     "typescript": "latest"
   },
