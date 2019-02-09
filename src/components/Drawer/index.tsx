@@ -8,7 +8,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocalPizzaIcon from '@material-ui/icons/LocalPizza';
 import SearchIcon from '@material-ui/icons/Search';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { Redirect, withRouter, RouteComponentProps } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 import withRoot from '../../withRoot';
 
@@ -19,24 +19,13 @@ const styles = {
 };
 
 export interface Props extends WithStyles<typeof styles>, RouteComponentProps {}
-export interface State {
-  redirectTarget: string | null;
-}
 
-class Drawer extends React.Component<Props, State> {
-  state: State = {
-    redirectTarget: null,
-  };
-
+class Drawer extends React.Component<Props, {}> {
   navigateTo(redirectTarget: string) {
     return () => this.props.history.push(redirectTarget);
   }
 
   render() {
-    if (this.state.redirectTarget !== null) {
-      return <Redirect to={this.state.redirectTarget} push />;
-    }
-
     const { classes } = this.props;
     return (
       <div className={classes.list}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -48,23 +48,13 @@ const styles = {
   },
 };
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props extends WithStyles<typeof styles>, RouteComponentProps {
   recipe: Recipe;
-}
-export interface State {
-  redirectTarget: string | null;
 }
 
 class RecipeCard extends React.Component<Props, {}> {
-  state: State = {
-    redirectTarget: null,
-  };
-
-  navigateToRecipe() {
-    const { id } = this.props.recipe;
-    const redirectTarget = `/recipe/${id}`;
-    console.log(redirectTarget);
-    this.setState({ redirectTarget });
+  navigateTo(redirectTarget: string) {
+    return () => this.props.history.push(redirectTarget);
   }
 
   formatDate = (date: Date) => {
@@ -88,17 +78,25 @@ class RecipeCard extends React.Component<Props, {}> {
     return (
       <span className={classes.chips}>
         {recipe.labels.map(label => {
-          return <Chip color="primary" className={classes.chip} key={label} label={label} />;
+          const handleChipClick = (event: React.MouseEvent) => {
+            event.stopPropagation();
+            this.props.history.push(`/categories/${label}`);
+          };
+          return (
+            <Chip
+              onClick={handleChipClick}
+              color="primary"
+              className={classes.chip}
+              key={label}
+              label={label}
+            />
+          );
         })}
       </span>
     );
   }
 
   render() {
-    if (this.state.redirectTarget) {
-      return <Redirect to={this.state.redirectTarget} push />;
-    }
-
     const { classes, recipe } = this.props;
     return (
       <Card className={classes.card}>
@@ -113,7 +111,7 @@ class RecipeCard extends React.Component<Props, {}> {
         />
         <CardActionArea>
           <CardMedia
-            onClick={() => this.navigateToRecipe()}
+            onClick={this.navigateTo(`/recipe/${recipe.id}`)}
             className={classes.media}
             image={recipe.image}
             title={recipe.title}
@@ -126,4 +124,4 @@ class RecipeCard extends React.Component<Props, {}> {
   }
 }
 
-export default withRoot(withStyles(styles)(RecipeCard));
+export default withRouter(withRoot(withStyles(styles)(RecipeCard)));

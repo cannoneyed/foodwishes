@@ -11,7 +11,8 @@ const styles = {
   root: {
     flexGrow: 1,
   },
-  grow: {
+  left: {
+    alignItems: 'center',
     flexGrow: 1,
   },
   menuButton: {
@@ -29,9 +30,9 @@ class ToolbarComponent extends React.Component<Props, {}> {
     return (
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            Food Wishes
-          </Typography>
+          <span className={classes.left}>
+            <img src="/foodwishes_logo.png" width="90" />
+          </span>
           <IconButton
             className={classes.menuButton}
             onClick={onMenuClick}
