@@ -1,7 +1,6 @@
 import * as React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import withRoot from '../../withRoot';
@@ -16,7 +15,7 @@ class ToolbarComponent extends React.Component<Props, {}> {
   render() {
     const { onMenuClick } = this.props;
     return (
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <span className={styles.left}>
             <img src="/foodwishes_logo.png" width="90" />

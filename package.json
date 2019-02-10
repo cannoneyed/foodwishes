@@ -16,6 +16,7 @@
     "mobx-react": "^5.4.3",
     "react": "latest",
     "react-dom": "latest",
+    "react-infinite": "^0.13.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "latest"
   },
@@ -25,6 +26,7 @@
     "@types/jest": "*",
     "@types/lodash": "^4.14.120",
     "@types/node": "*",
+    "@types/react-infinite": "^0.0.33",
     "@types/react-router-dom": "^4.3.1",
     "@types/router5": "^5.0.0",
     "prettier": "^1.16.4",
