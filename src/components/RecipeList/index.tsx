@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
-import { Recipe } from '../../core/recipes';
+import { Recipe } from '../../core/recipe';
 import RecipeCard from '../../components/RecipeCard';
 
 import styles from './styles.module.css';
@@ -14,11 +14,12 @@ export interface Props {
   recipes: Recipe[];
   isLoading: boolean;
   loadMore: () => {};
+  canLoadMore: boolean;
 }
 
 class RecipeList extends React.Component<Props, {}> {
   render() {
-    const { isLoading, loadMore, recipes } = this.props;
+    const { canLoadMore, isLoading, loadMore, recipes } = this.props;
     return (
       <div className={styles.container}>
         {recipes.map(recipe => (
@@ -26,7 +27,7 @@ class RecipeList extends React.Component<Props, {}> {
             <RecipeCard recipe={recipe} />
           </div>
         ))}
-        {
+        {canLoadMore && (
           <div className={styles.loadMoreContainer}>
             <Fab color="primary" variant="extended" aria-label="More" onClick={() => loadMore()}>
               {isLoading ? (
@@ -41,7 +42,7 @@ class RecipeList extends React.Component<Props, {}> {
               )}
             </Fab>
           </div>
-        }
+        )}
       </div>
     );
   }

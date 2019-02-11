@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocalDiningIcon from '@material-ui/icons/LocalDining';
 import withRoot from '../../withRoot';
-import { Recipe } from '../../core/recipes';
+import { Recipe } from '../../core/recipe';
 
 import styles from './styles.module.css';
 

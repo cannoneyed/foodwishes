@@ -1,76 +1,68 @@
 import * as api from './api';
-import { observable, decorate } from 'mobx';
-import Recipe from '../components/Recipe';
-import { string } from 'prop-types';
-
-export interface Recipe {
-  completeRecipeLink?: string;
-  description: string[];
-  directions: string[];
-  images: string[];
-  imagesLow: string[];
-  videoSrc: string;
-  rawContent: string;
-  id: string;
-  image: string;
-  imageLow: string;
-  labels: string[];
-  published: Date;
-  replies: number;
-  title: string;
-  updated: Date;
-}
+import { observable, decorate, computed } from 'mobx';
+import { RecipesLoadManager } from './load-manager';
+import { Recipe } from './recipe';
 
 export class RecipeStore {
-  isLoadingRecipesByLabel = new Map<string, boolean>();
-  recipesByLabel = new Map<string, Recipe[]>();
-  recipesByLabelNextPageTokens = new Map<string, string>();
+  latestRecipesMgr = new RecipesLoadManager();
 
-  isLoadingRecipeById = false;
+  recipesManagersByLabel = new Map<string, RecipesLoadManager>();
+
+  isLoadingRecipeById = new Map<string, boolean>();
   recipesById = new Map<string, Recipe>();
 
-  isLoadingLatestRecipes = false;
-  latestRecipes: Recipe[] = [];
-  latestRecipesNextPageToken: string | undefined;
+  getLatestRecipes() {
+    return this.latestRecipesMgr.recipes;
+  }
+
+  getRecipesByLabel(label: string) {
+    const recipeManager = this.recipesManagersByLabel.get(label);
+    if (recipeManager) {
+      return recipeManager.recipes;
+    }
+    return [];
+  }
 
   loadLatestRecipes = async () => {
-    if (this.isLoadingLatestRecipes) return;
-    this.isLoadingLatestRecipes = true;
+    if (this.latestRecipesMgr.isLoading) return;
+    this.latestRecipesMgr.isLoading = true;
 
     try {
-      const params = { pageToken: this.latestRecipesNextPageToken };
+      const params = { pageToken: this.latestRecipesMgr.nextPageToken };
       const { recipes, nextPageToken } = await api.loadRecipes(params);
-      this.latestRecipesNextPageToken = nextPageToken;
-      this.latestRecipes.push(...recipes);
+      this.latestRecipesMgr.nextPageToken = nextPageToken;
+      this.latestRecipesMgr.recipes.push(...recipes);
       recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
     } catch (err) {}
 
-    this.isLoadingLatestRecipes = false;
+    this.latestRecipesMgr.isLoading = false;
   };
 
   loadRecipesByLabel = async (labels: string) => {
-    if (this.isLoadingRecipesByLabel.get(labels)) return;
-    this.isLoadingRecipesByLabel.set(labels, true);
+    if (!this.recipesManagersByLabel.has(labels)) {
+      this.recipesManagersByLabel.set(labels, new RecipesLoadManager());
+    }
+    const recipesManager = this.recipesManagersByLabel.get(labels)!;
+    if (recipesManager.isLoading) return;
+    recipesManager.isLoading = true;
 
     try {
-      const pageToken = this.recipesByLabelNextPageTokens.get(labels) || undefined;
+      const pageToken = recipesManager.nextPageToken;
       const params = { labels, pageToken };
       const { recipes, nextPageToken } = await api.loadRecipesByLabels(params);
       if (nextPageToken) {
-        this.recipesByLabelNextPageTokens.set(labels, nextPageToken);
+        recipesManager.nextPageToken = nextPageToken;
       }
-      const recipesByLabel = this.recipesByLabel.get(labels) || [];
-      recipesByLabel.push(...recipes);
-      this.recipesByLabel.set(labels, recipesByLabel);
+      recipesManager.recipes.push(...recipes);
       recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
     } catch (err) {}
 
-    this.isLoadingRecipesByLabel.set(labels, false);
+    recipesManager.isLoading = false;
   };
 
   loadRecipeById = async (id: string) => {
-    if (this.isLoadingRecipeById || this.recipesById.get(id)) return;
-    this.isLoadingRecipeById = true;
+    if (this.isLoadingRecipeById.get(id) || this.recipesById.get(id)) return;
+    this.isLoadingRecipeById.set(id, true);
 
     try {
       const recipe = await api.loadRecipeById(id);
@@ -79,15 +71,16 @@ export class RecipeStore {
       }
     } catch (err) {}
 
-    this.isLoadingLatestRecipes = false;
+    this.isLoadingRecipeById.set(id, false);
   };
 }
 
 decorate(RecipeStore, {
-  isLoadingRecipesByLabel: observable,
-  recipesByLabel: observable,
-  isLoadingLatestRecipes: observable,
-  latestRecipes: observable,
+  // Latest recipes
+  latestRecipesMgr: observable,
+  // Recipes by label
+  recipesManagersByLabel: observable,
+  isLoadingRecipeById: observable,
   recipesById: observable,
 });
 

@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import withRoot from '../../withRoot';
-import { Recipe } from '../../core/recipes';
+import { Recipe } from '../../core/recipe';
 
 import styles from './styles.module.css';
 

@@ -10,21 +10,23 @@ export interface State {}
 
 class HomePage extends React.Component<Props, State> {
   componentDidMount() {
-    if (recipeStore.latestRecipes.length === 0) {
+    if (recipeStore.getLatestRecipes().length === 0) {
       recipeStore.loadLatestRecipes();
     }
   }
 
   render() {
-    const { latestRecipes, isLoadingLatestRecipes, loadLatestRecipes } = recipeStore;
-    const loadMore = () => loadLatestRecipes();
+    const { latestRecipesMgr } = recipeStore;
+    const { recipes, isLoading, canLoadMore } = latestRecipesMgr;
+    const loadMore = () => recipeStore.loadLatestRecipes();
 
     return (
       <PageWrapper>
         <RecipeList
-          recipes={latestRecipes}
-          isLoading={isLoadingLatestRecipes}
+          recipes={recipes}
+          isLoading={isLoading}
           loadMore={loadMore}
+          canLoadMore={canLoadMore}
         />
       </PageWrapper>
     );

@@ -27,22 +27,30 @@ class LabelsPage extends React.Component<Props, State> {
   }
 
   maybeLoadRecipesByLabels(labels: string) {
-    const recipesByLabel = recipeStore.recipesByLabel.get(labels);
-    if (!recipesByLabel) {
+    const recipesManager = recipeStore.recipesManagersByLabel.get(labels);
+    const recipesExist = recipesManager && recipesManager.recipes.length > 0;
+    if (!recipesExist) {
       recipeStore.loadRecipesByLabel(labels);
     }
   }
 
   render() {
     const { labels } = this.props.match.params;
-    const recipes = recipeStore.recipesByLabel.get(labels) || [];
+    const recipesManager = recipeStore.recipesManagersByLabel.get(labels);
+    const recipes = recipeStore.getRecipesByLabel(labels);
 
-    const isLoading = !!recipeStore.isLoadingRecipesByLabel.get(labels);
+    const isLoading = recipesManager ? recipesManager.isLoading : false;
+    const canLoadMore = recipesManager ? recipesManager.canLoadMore : false;
     const loadMore = () => recipeStore.loadRecipesByLabel(labels);
 
     return (
       <PageWrapper>
-        <RecipeList recipes={recipes} isLoading={isLoading} loadMore={loadMore} />
+        <RecipeList
+          recipes={recipes}
+          isLoading={isLoading}
+          loadMore={loadMore}
+          canLoadMore={canLoadMore}
+        />
       </PageWrapper>
     );
   }
