@@ -25,6 +25,11 @@
 
 .title {
   font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.title:hover {
+  text-decoration: underline;
 }
 
 .media {

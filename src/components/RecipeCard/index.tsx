@@ -19,8 +19,10 @@ export interface Props extends RouteComponentProps {
 }
 
 class RecipeCard extends React.Component<Props, {}> {
-  navigateTo(redirectTarget: string) {
-    return () => this.props.history.push(redirectTarget);
+  navigateToRecipe() {
+    const { recipe } = this.props;
+    const recipeAddress = `/recipe/${recipe.id}`;
+    return () => this.props.history.push(recipeAddress);
   }
 
   formatDate = (date: Date) => {
@@ -33,7 +35,7 @@ class RecipeCard extends React.Component<Props, {}> {
 
   renderTitle = (title: string) => {
     return (
-      <Typography variant="h6" classes={{ h6: styles.title }}>
+      <Typography variant="h6" classes={{ h6: styles.title }} onClick={this.navigateToRecipe()}>
         {title}
       </Typography>
     );
@@ -78,7 +80,7 @@ class RecipeCard extends React.Component<Props, {}> {
         />
         <CardActionArea>
           <CardMedia
-            onClick={this.navigateTo(`/recipe/${recipe.id}`)}
+            onClick={this.navigateToRecipe()}
             className={styles.media}
             image={recipe.image}
             title={recipe.title}
