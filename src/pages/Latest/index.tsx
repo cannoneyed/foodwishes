@@ -8,7 +8,7 @@ import RecipeList from '../../components/RecipeList';
 export interface Props {}
 export interface State {}
 
-class HomePage extends React.Component<Props, State> {
+class LatestPage extends React.Component<Props, State> {
   componentDidMount() {
     if (recipeStore.getLatestRecipes().length === 0) {
       recipeStore.loadLatestRecipes();
@@ -33,4 +33,4 @@ class HomePage extends React.Component<Props, State> {
   }
 }
 
-export default observer(HomePage);
+export default observer(LatestPage);

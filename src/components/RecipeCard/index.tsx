@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
+import { observer } from 'mobx-react';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -11,6 +12,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocalDiningIcon from '@material-ui/icons/LocalDining';
 import withRoot from '../../withRoot';
 import { Recipe } from '../../core/recipe';
+import { recipeStore } from '../../core/recipes';
 
 import styles from './styles.module.css';
 
@@ -43,6 +45,7 @@ class RecipeCard extends React.Component<Props, {}> {
 
   renderChips() {
     const { recipe } = this.props;
+
     return (
       <span className={styles.chips}>
         {recipe.labels.map(label => {
@@ -66,13 +69,15 @@ class RecipeCard extends React.Component<Props, {}> {
 
   render() {
     const { recipe } = this.props;
+    const { isFavorited, toggleFavorite } = recipeStore;
+    const handleFavoriteClick = () => toggleFavorite(recipe);
 
     return (
       <Card className={styles.card}>
         <CardHeader
           action={
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
+            <IconButton aria-label="Add to favorites" onClick={handleFavoriteClick}>
+              <FavoriteIcon color={isFavorited(recipe) ? 'primary' : 'disabled'} />
             </IconButton>
           }
           title={this.renderTitle(recipe.title)}
@@ -93,4 +98,4 @@ class RecipeCard extends React.Component<Props, {}> {
   }
 }
 
-export default withRouter(withRoot(RecipeCard));
+export default withRouter(withRoot(observer(RecipeCard)));

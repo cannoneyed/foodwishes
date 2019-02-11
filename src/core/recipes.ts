@@ -11,6 +11,8 @@ export class RecipeStore {
   isLoadingRecipeById = new Map<string, boolean>();
   recipesById = new Map<string, Recipe>();
 
+  favorites = new Map<string, { recipe: Recipe; timestamp: number }>();
+
   getLatestRecipes() {
     return this.latestRecipesMgr.recipes;
   }
@@ -21,6 +23,35 @@ export class RecipeStore {
       return recipeManager.recipes;
     }
     return [];
+  }
+
+  toggleFavorite = (recipe: Recipe) => {
+    if (this.isFavorited(recipe)) {
+      this.removeFromFavorites(recipe);
+    } else {
+      this.addToFavorites(recipe);
+    }
+  };
+
+  addToFavorites = (recipe: Recipe) => {
+    this.favorites.set(recipe.id, { recipe, timestamp: Date.now() });
+  };
+
+  removeFromFavorites = (recipe: Recipe) => {
+    this.favorites.delete(recipe.id);
+  };
+
+  isFavorited = (recipe: Recipe) => {
+    return this.favorites.has(recipe.id);
+  };
+
+  getFavorites(): Recipe[] {
+    const favorites = [...this.favorites.values()];
+    return favorites
+      .sort((a, b) => {
+        return a.timestamp - b.timestamp;
+      })
+      .map(entry => entry.recipe);
   }
 
   loadLatestRecipes = async () => {
@@ -80,6 +111,9 @@ decorate(RecipeStore, {
   latestRecipesMgr: observable,
   // Recipes by label
   recipesManagersByLabel: observable,
+  // Favorites
+  favorites: observable,
+  // Recipes by id
   isLoadingRecipeById: observable,
   recipesById: observable,
 });

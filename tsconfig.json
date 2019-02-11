@@ -12,6 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
+    "downlevelIteration": true,
     "noEmit": true,
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"]
