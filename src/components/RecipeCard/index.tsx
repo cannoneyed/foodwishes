@@ -48,7 +48,7 @@ class RecipeCard extends React.Component<Props, {}> {
         {recipe.labels.map(label => {
           const handleChipClick = (event: React.MouseEvent) => {
             event.stopPropagation();
-            this.props.history.push(`/categories/${label}`);
+            this.props.history.push(`/labels/${label}`);
           };
           return (
             <Chip

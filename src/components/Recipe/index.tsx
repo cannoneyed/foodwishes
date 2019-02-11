@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,7 +16,7 @@ import { Recipe } from '../../core/recipes';
 
 import styles from './styles.module.css';
 
-export interface Props {
+export interface Props extends RouteComponentProps {
   recipe: Recipe;
 }
 
@@ -37,7 +38,19 @@ class FullRecipe extends React.Component<Props, {}> {
     return (
       <span className={styles.chips}>
         {recipe.labels.map(label => {
-          return <Chip color="primary" className={styles.chip} key={label} label={label} />;
+          const handleChipClick = (event: React.MouseEvent) => {
+            event.stopPropagation();
+            this.props.history.push(`/labels/${label}`);
+          };
+          return (
+            <Chip
+              onClick={handleChipClick}
+              color="primary"
+              className={styles.chip}
+              key={label}
+              label={label}
+            />
+          );
         })}
       </span>
     );
@@ -95,4 +108,4 @@ class FullRecipe extends React.Component<Props, {}> {
   }
 }
 
-export default withRoot(FullRecipe);
+export default withRouter(withRoot(FullRecipe));

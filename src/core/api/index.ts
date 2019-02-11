@@ -57,7 +57,6 @@ export async function loadRecipesByLabels(
   parameters: LoadRecipesByLabelsParameters
 ): Promise<LoadRecipesResponse> {
   const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
-  console.log('🔥', apiParameters);
   const res = await api.get<GetPostsResponse>('posts', apiParameters);
 
   const posts = res.data ? res.data.items : [];
