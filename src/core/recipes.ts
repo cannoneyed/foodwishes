@@ -1,6 +1,7 @@
 import * as api from './api';
 import { observable, decorate } from 'mobx';
 import Recipe from '../components/Recipe';
+import { string } from 'prop-types';
 
 export interface Recipe {
   completeRecipeLink?: string;
@@ -21,6 +22,10 @@ export interface Recipe {
 }
 
 export class RecipeStore {
+  isLoadingRecipesByLabel = new Map<string, boolean>();
+  recipesByLabel = new Map<string, Recipe[]>();
+  recipesByLabelNextPageTokens = new Map<string, string>();
+
   isLoadingRecipeById = false;
   recipesById = new Map<string, Recipe>();
 
@@ -43,6 +48,26 @@ export class RecipeStore {
     this.isLoadingLatestRecipes = false;
   };
 
+  loadRecipesByLabel = async (labels: string) => {
+    if (this.isLoadingRecipesByLabel.get(labels)) return;
+    this.isLoadingRecipesByLabel.set(labels, true);
+
+    try {
+      const pageToken = this.recipesByLabelNextPageTokens.get(labels) || undefined;
+      const params = { labels, pageToken };
+      const { recipes, nextPageToken } = await api.loadRecipesByLabels(params);
+      if (nextPageToken) {
+        this.recipesByLabelNextPageTokens.set(labels, nextPageToken);
+      }
+      const recipesByLabel = this.recipesByLabel.get(labels) || [];
+      recipesByLabel.push(...recipes);
+      this.recipesByLabel.set(labels, recipesByLabel);
+      recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
+    } catch (err) {}
+
+    this.isLoadingRecipesByLabel.set(labels, false);
+  };
+
   loadRecipeById = async (id: string) => {
     if (this.isLoadingRecipeById || this.recipesById.get(id)) return;
     this.isLoadingRecipeById = true;
@@ -59,6 +84,8 @@ export class RecipeStore {
 }
 
 decorate(RecipeStore, {
+  isLoadingRecipesByLabel: observable,
+  recipesByLabel: observable,
   isLoadingLatestRecipes: observable,
   latestRecipes: observable,
   recipesById: observable,

@@ -13,16 +13,23 @@ api.addRequestTransform(request => {
   request.params.key = API_KEY;
 });
 
-export interface GetRecipesParameters {
+export interface LoadRecipesParameters {
   pageToken?: string;
 }
 
-export interface GetRecipesResponse {
+export interface LoadRecipesByLabelsParameters {
+  pageToken?: string;
+  labels: string;
+}
+
+export interface LoadRecipesResponse {
   recipes: Recipe[];
   nextPageToken?: string;
 }
 
-export async function loadRecipes(parameters?: GetRecipesParameters): Promise<GetRecipesResponse> {
+export async function loadRecipes(
+  parameters?: LoadRecipesParameters
+): Promise<LoadRecipesResponse> {
   const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
   const res = await api.get<GetPostsResponse>('posts', apiParameters);
 
@@ -44,4 +51,21 @@ export async function loadRecipeById(id: string): Promise<Recipe | undefined> {
     const recipes = processPosts([post]);
     return recipes[0];
   }
+}
+
+export async function loadRecipesByLabels(
+  parameters: LoadRecipesByLabelsParameters
+): Promise<LoadRecipesResponse> {
+  const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
+  console.log('🔥', apiParameters);
+  const res = await api.get<GetPostsResponse>('posts', apiParameters);
+
+  const posts = res.data ? res.data.items : [];
+  const recipes = processPosts(posts);
+  const nextPageToken = res.data ? res.data.nextPageToken : undefined;
+
+  return {
+    recipes,
+    nextPageToken,
+  };
 }
