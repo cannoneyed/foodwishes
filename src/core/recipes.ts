@@ -1,4 +1,4 @@
-import { getRecipes } from './api';
+import * as api from './api';
 import { observable, decorate } from 'mobx';
 import Recipe from '../components/Recipe';
 
@@ -21,6 +21,9 @@ export interface Recipe {
 }
 
 export class RecipeStore {
+  isLoadingRecipeById = false;
+  recipesById = new Map<string, Recipe>();
+
   isLoadingLatestRecipes = false;
   latestRecipes: Recipe[] = [];
   latestRecipesNextPageToken: string | undefined;
@@ -31,9 +34,24 @@ export class RecipeStore {
 
     try {
       const params = { pageToken: this.latestRecipesNextPageToken };
-      const { recipes, nextPageToken } = await getRecipes(params);
+      const { recipes, nextPageToken } = await api.loadRecipes(params);
       this.latestRecipesNextPageToken = nextPageToken;
       this.latestRecipes.push(...recipes);
+      recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
+    } catch (err) {}
+
+    this.isLoadingLatestRecipes = false;
+  };
+
+  loadRecipeById = async (id: string) => {
+    if (this.isLoadingRecipeById || this.recipesById.get(id)) return;
+    this.isLoadingRecipeById = true;
+
+    try {
+      const recipe = await api.loadRecipeById(id);
+      if (recipe) {
+        this.recipesById.set(recipe.id, recipe);
+      }
     } catch (err) {}
 
     this.isLoadingLatestRecipes = false;
@@ -43,6 +61,7 @@ export class RecipeStore {
 decorate(RecipeStore, {
   isLoadingLatestRecipes: observable,
   latestRecipes: observable,
+  recipesById: observable,
 });
 
 export const recipeStore = new RecipeStore();

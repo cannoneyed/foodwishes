@@ -1,7 +1,7 @@
 import apisauce from 'apisauce';
 import { API_KEY, BLOG_ID } from '../config';
 import { processPosts, Recipe } from './process';
-import { GetPostsResponse } from './definitions';
+import { Post, GetPostsResponse } from './definitions';
 export * from './definitions';
 
 const baseURL = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}`;
@@ -22,7 +22,7 @@ export interface GetRecipesResponse {
   nextPageToken?: string;
 }
 
-export async function getRecipes(parameters?: GetRecipesParameters): Promise<GetRecipesResponse> {
+export async function loadRecipes(parameters?: GetRecipesParameters): Promise<GetRecipesResponse> {
   const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
   const res = await api.get<GetPostsResponse>('posts', apiParameters);
 
@@ -34,4 +34,14 @@ export async function getRecipes(parameters?: GetRecipesParameters): Promise<Get
     recipes,
     nextPageToken,
   };
+}
+
+export async function loadRecipeById(id: string): Promise<Recipe | undefined> {
+  const res = await api.get<Post>(`posts/${id}`, { fetchImages: true });
+
+  const post = res.data;
+  if (post) {
+    const recipes = processPosts([post]);
+    return recipes[0];
+  }
 }

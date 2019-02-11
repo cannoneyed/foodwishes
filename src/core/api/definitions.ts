@@ -39,3 +39,7 @@ export interface GetPostsResponse {
   items: Post[];
   nextPageToken: string;
 }
+
+export interface GetPostResponse {
+  data: Post;
+}

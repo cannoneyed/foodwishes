@@ -1,21 +1,31 @@
 import * as React from 'react';
+import { match } from 'react-router-dom';
+import { observer } from 'mobx-react';
 
-import { recipes } from '../../core/recipes';
+import { recipeStore } from '../../core/recipes';
 
 import PageWrapper from '../Page';
 import Recipe from '../../components/Recipe';
 
-export interface Props {}
+interface RecipeIdParams {
+  recipeId: string;
+}
+export interface Props {
+  match: match<RecipeIdParams>;
+}
 export interface State {}
 
 class HomePage extends React.Component<Props, State> {
+  componentDidMount() {
+    const { recipeId } = this.props.match.params;
+    recipeStore.loadRecipeById(recipeId);
+  }
+
   render() {
-    return (
-      <PageWrapper>
-        <Recipe recipe={recipes[2]} />
-      </PageWrapper>
-    );
+    const { recipeId } = this.props.match.params;
+    const recipe = recipeStore.recipesById.get(recipeId);
+    return <PageWrapper>{recipe && <Recipe recipe={recipe} />}</PageWrapper>;
   }
 }
 
-export default HomePage;
+export default observer(HomePage);
