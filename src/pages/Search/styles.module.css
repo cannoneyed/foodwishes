@@ -1,0 +1,15 @@
+.card {
+  max-width: 600px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.searchCard {
+  display: flex;
+  align-items: flex-end;
+}
+
+.inputContainer {
+  flex-grow: 3;
+  padding-right: 20px;
+}

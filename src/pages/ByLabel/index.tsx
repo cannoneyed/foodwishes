@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { match } from 'react-router-dom';
 import { observer } from 'mobx-react';
+import Typography from '@material-ui/core/Typography';
 
 import { recipeStore } from '../../core/recipes';
 
 import PageWrapper from '../Page';
 import RecipeList from '../../components/RecipeList';
+
+const styles = require('./styles.module.css');
 
 interface RecipeIdParams {
   labels: string;
@@ -15,7 +18,7 @@ export interface Props {
 }
 export interface State {}
 
-class LabelsPage extends React.Component<Props, State> {
+class ByLabelPage extends React.Component<Props, State> {
   componentDidMount() {
     const { labels } = this.props.match.params;
     this.maybeLoadRecipesByLabels(labels);
@@ -45,6 +48,9 @@ class LabelsPage extends React.Component<Props, State> {
 
     return (
       <PageWrapper>
+        <div className={styles.title}>
+          <Typography variant="h6">{labels} Recipes</Typography>
+        </div>
         <RecipeList
           recipes={recipes}
           isLoading={isLoading}
@@ -56,4 +62,4 @@ class LabelsPage extends React.Component<Props, State> {
   }
 }
 
-export default observer(LabelsPage);
+export default observer(ByLabelPage);
