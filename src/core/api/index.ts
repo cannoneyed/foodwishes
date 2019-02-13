@@ -22,6 +22,11 @@ export interface LoadRecipesByLabelsParameters {
   labels: string;
 }
 
+export interface LoadRecipesBySearchParameters {
+  pageToken?: string;
+  q: string;
+}
+
 export interface LoadRecipesResponse {
   recipes: Recipe[];
   nextPageToken?: string;
@@ -58,6 +63,22 @@ export async function loadRecipesByLabels(
 ): Promise<LoadRecipesResponse> {
   const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
   const res = await api.get<GetPostsResponse>('posts', apiParameters);
+
+  const posts = res.data ? res.data.items : [];
+  const recipes = processPosts(posts);
+  const nextPageToken = res.data ? res.data.nextPageToken : undefined;
+
+  return {
+    recipes,
+    nextPageToken,
+  };
+}
+
+export async function loadRecipesBySearch(
+  parameters: LoadRecipesBySearchParameters
+): Promise<LoadRecipesResponse> {
+  const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
+  const res = await api.get<GetPostsResponse>('posts/search', apiParameters);
 
   const posts = res.data ? res.data.items : [];
   const recipes = processPosts(posts);

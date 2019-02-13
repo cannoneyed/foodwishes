@@ -7,6 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
 
+import { recipeStore } from '../../core/recipes';
+
 import PageWrapper from '../Page';
 
 const styles = require('./styles.module.css');
@@ -25,6 +27,10 @@ class SearchPage extends React.Component<Props, State> {
     this.setState({ searchText: event.currentTarget.value });
   };
 
+  handleSubmit = () => {
+    recipeStore.loadRecipesBySearch(this.state.searchText);
+  };
+
   render() {
     return (
       <PageWrapper>
@@ -41,7 +47,7 @@ class SearchPage extends React.Component<Props, State> {
                 />
               </div>
               <div className={styles.buttonContainer}>
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" onClick={this.handleSubmit}>
                   Submit
                 </Button>
               </div>

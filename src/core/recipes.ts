@@ -5,8 +5,8 @@ import { Recipe } from './recipe';
 
 export class RecipeStore {
   latestRecipesMgr = new RecipesLoadManager();
-
   recipesManagersByLabel = new Map<string, RecipesLoadManager>();
+  recipesManagersBySearch = new Map<string, RecipesLoadManager>();
 
   isLoadingRecipeById = new Map<string, boolean>();
   recipesById = new Map<string, Recipe>();
@@ -50,6 +50,28 @@ export class RecipeStore {
       const pageToken = recipesManager.nextPageToken;
       const params = { labels, pageToken };
       const { recipes, nextPageToken } = await api.loadRecipesByLabels(params);
+      if (nextPageToken) {
+        recipesManager.nextPageToken = nextPageToken;
+      }
+      recipesManager.recipes.push(...recipes);
+      recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
+    } catch (err) {}
+
+    recipesManager.isLoading = false;
+  };
+
+  loadRecipesBySearch = async (search: string) => {
+    if (!this.recipesManagersBySearch.has(search)) {
+      this.recipesManagersBySearch.set(search, new RecipesLoadManager());
+    }
+    const recipesManager = this.recipesManagersBySearch.get(search)!;
+    if (recipesManager.isLoading) return;
+    recipesManager.isLoading = true;
+
+    try {
+      const pageToken = recipesManager.nextPageToken;
+      const params = { q: search, pageToken };
+      const { recipes, nextPageToken } = await api.loadRecipesBySearch(params);
       if (nextPageToken) {
         recipesManager.nextPageToken = nextPageToken;
       }
