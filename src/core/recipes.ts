@@ -2,6 +2,12 @@ import * as api from './api';
 import { observable, decorate, computed } from 'mobx';
 import { RecipesLoadManager } from './load-manager';
 import { Recipe } from './recipe';
+import { deserializeRecipe } from './api/process';
+
+export interface FavoriteEntry {
+  recipe: Recipe;
+  timestamp: number;
+}
 
 export class RecipeStore {
   latestRecipesMgr = new RecipesLoadManager();
@@ -11,7 +17,11 @@ export class RecipeStore {
   isLoadingRecipeById = new Map<string, boolean>();
   recipesById = new Map<string, Recipe>();
 
-  favorites = new Map<string, { recipe: Recipe; timestamp: number }>();
+  favorites = new Map<string, FavoriteEntry>();
+
+  constructor() {
+    this.deserializeFavorites();
+  }
 
   getLatestRecipes() {
     return this.latestRecipesMgr.recipes;
@@ -33,17 +43,39 @@ export class RecipeStore {
     }
   };
 
-  addToFavorites = (recipe: Recipe) => {
+  private addToFavorites = (recipe: Recipe) => {
     this.favorites.set(recipe.id, { recipe, timestamp: Date.now() });
+    this.serializeFavorites();
   };
 
-  removeFromFavorites = (recipe: Recipe) => {
+  private removeFromFavorites = (recipe: Recipe) => {
     this.favorites.delete(recipe.id);
+    this.serializeFavorites();
   };
 
   isFavorited = (recipe: Recipe) => {
     return this.favorites.has(recipe.id);
   };
+
+  private deserializeFavorites() {
+    try {
+      const serialized = window.localStorage.getItem('favorites');
+      const entries: any[] = serialized ? JSON.parse(serialized) : [];
+      entries.forEach(entry => {
+        const recipe = deserializeRecipe(entry.recipe);
+        this.favorites.set(recipe.id, { recipe, timestamp: entry.timestamp });
+      });
+    } catch (err) {
+      console.error(err);
+      window.localStorage.clear();
+    }
+  }
+
+  private serializeFavorites() {
+    const favoriteEntries = [...this.favorites.values()];
+    const favorites = JSON.stringify(favoriteEntries);
+    window.localStorage.setItem('favorites', favorites);
+  }
 
   getFavorites(): Recipe[] {
     const favorites = [...this.favorites.values()];
