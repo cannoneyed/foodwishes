@@ -9,15 +9,18 @@ import LocalPizzaIcon from '@material-ui/icons/LocalPizza';
 import SearchIcon from '@material-ui/icons/Search';
 import { withRouter, RouteComponentProps } from 'react-router';
 
-import withRoot from '../../withRoot';
-
 import styles from './styles.module.css';
 
-export interface Props extends RouteComponentProps {}
+export interface Props extends RouteComponentProps {
+  closeDrawer: () => void;
+}
 
-class Drawer extends React.Component<Props, {}> {
+class DrawerContents extends React.Component<Props, {}> {
   navigateTo(redirectTarget: string) {
-    return () => this.props.history.push(redirectTarget);
+    return () => {
+      this.props.closeDrawer();
+      this.props.history.push(redirectTarget);
+    };
   }
 
   render() {
@@ -54,4 +57,4 @@ class Drawer extends React.Component<Props, {}> {
   }
 }
 
-export default withRouter(withRoot(Drawer));
+export default withRouter(DrawerContents);

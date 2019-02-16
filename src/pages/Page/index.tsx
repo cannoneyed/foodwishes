@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 
-import DrawerContents from '../../components/Drawer';
+import DrawerContents from '../../components/DrawerContents';
 import Toolbar from '../../components/Toolbar';
 import withRoot from '../../withRoot';
 
@@ -34,11 +34,10 @@ class PageWrapper extends React.Component<Props, State> {
           anchor="right"
           open={this.state.drawerOpen}
           onClose={() => {
-            console.log('close');
             this.toggleDrawer(false);
           }}
         >
-          <DrawerContents />
+          <DrawerContents closeDrawer={() => this.toggleDrawer(false)} />
         </Drawer>
       </div>
     );
