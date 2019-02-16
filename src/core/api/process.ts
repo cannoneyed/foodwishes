@@ -43,12 +43,11 @@ export function deserializeRecipe(parsed: any): Recipe {
 export function processPosts(posts: Post[]): Recipe[] {
   const recipes: (Recipe | undefined)[] = posts
     .filter(post => {
-      const hasLabels = post.labels;
+      const hasLabels = !!post.labels;
       const notBlogNews = !includes(post.labels, 'Blog News');
-      const hasImages = post.images;
 
       // Filter out all posts without labels, with blog news labels, or next up posts
-      return every([hasImages, hasLabels, notBlogNews]);
+      return every([hasLabels, notBlogNews]);
     })
     .map(post => {
       const content = processContent(post);

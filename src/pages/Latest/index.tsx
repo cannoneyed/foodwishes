@@ -16,8 +16,8 @@ class LatestPage extends React.Component<Props, State> {
   }
 
   render() {
-    const { latestRecipesMgr } = recipeStore;
-    const { recipes, isLoading, canLoadMore } = latestRecipesMgr;
+    const { latestRecipesManager } = recipeStore;
+    const { recipes, isLoading, canLoadMore } = latestRecipesManager;
     const loadMore = () => recipeStore.loadLatestRecipes();
 
     return (

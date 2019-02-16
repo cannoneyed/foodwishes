@@ -13,3 +13,10 @@
   flex-grow: 3;
   padding-right: 20px;
 }
+
+.searchButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}

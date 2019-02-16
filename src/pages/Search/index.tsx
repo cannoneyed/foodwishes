@@ -4,12 +4,13 @@ import { observer } from 'mobx-react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 
 import { recipeStore } from '../../core/recipes';
 
 import PageWrapper from '../Page';
+import RecipeList from '../../components/RecipeList';
 
 const styles = require('./styles.module.css');
 
@@ -32,6 +33,10 @@ class SearchPage extends React.Component<Props, State> {
   };
 
   render() {
+    const { searchRecipesManager } = recipeStore;
+    const { recipes, isLoading } = searchRecipesManager;
+    const loadMore = () => recipeStore.loadRecipesBySearch(this.state.searchText);
+
     return (
       <PageWrapper title="Search">
         <Card className={styles.card}>
@@ -47,13 +52,30 @@ class SearchPage extends React.Component<Props, State> {
                 />
               </div>
               <div className={styles.buttonContainer}>
-                <Button variant="contained" color="primary" onClick={this.handleSubmit}>
-                  Submit
+                <Button
+                  disabled={isLoading}
+                  variant="contained"
+                  color="primary"
+                  onClick={this.handleSubmit}
+                >
+                  {isLoading ? (
+                    <span className={styles.searchButton}>
+                      <CircularProgress style={{ color: 'white' }} size={30} thickness={4} />
+                    </span>
+                  ) : (
+                    <span className={styles.searchButton}>Search</span>
+                  )}
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
+        <RecipeList
+          recipes={recipes}
+          isLoading={isLoading}
+          loadMore={loadMore}
+          canLoadMore={false}
+        />
       </PageWrapper>
     );
   }

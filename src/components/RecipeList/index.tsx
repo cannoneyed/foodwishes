@@ -1,6 +1,5 @@
 import * as React from 'react';
 import withRoot from '../../withRoot';
-import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';

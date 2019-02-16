@@ -10,9 +10,9 @@ export interface FavoriteEntry {
 }
 
 export class RecipeStore {
-  latestRecipesMgr = new RecipesLoadManager();
+  latestRecipesManager = new RecipesLoadManager();
   recipesManagersByLabel = new Map<string, RecipesLoadManager>();
-  recipesManagersBySearch = new Map<string, RecipesLoadManager>();
+  searchRecipesManager = new RecipesLoadManager();
 
   isLoadingRecipeById = new Map<string, boolean>();
   recipesById = new Map<string, Recipe>();
@@ -24,7 +24,11 @@ export class RecipeStore {
   }
 
   getLatestRecipes() {
-    return this.latestRecipesMgr.recipes;
+    return this.latestRecipesManager.recipes;
+  }
+
+  getSearchRecipes() {
+    return this.searchRecipesManager.recipes;
   }
 
   getRecipesByLabel(label: string) {
@@ -87,18 +91,18 @@ export class RecipeStore {
   }
 
   loadLatestRecipes = async () => {
-    if (this.latestRecipesMgr.isLoading) return;
-    this.latestRecipesMgr.isLoading = true;
+    if (this.latestRecipesManager.isLoading) return;
+    this.latestRecipesManager.isLoading = true;
 
     try {
-      const params = { pageToken: this.latestRecipesMgr.nextPageToken };
+      const params = { pageToken: this.latestRecipesManager.nextPageToken };
       const { recipes, nextPageToken } = await api.loadRecipes(params);
-      this.latestRecipesMgr.nextPageToken = nextPageToken;
-      this.latestRecipesMgr.recipes.push(...recipes);
+      this.latestRecipesManager.nextPageToken = nextPageToken;
+      this.latestRecipesManager.recipes.push(...recipes);
       recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
     } catch (err) {}
 
-    this.latestRecipesMgr.isLoading = false;
+    this.latestRecipesManager.isLoading = false;
   };
 
   loadRecipesByLabel = async (labels: string) => {
@@ -124,25 +128,19 @@ export class RecipeStore {
   };
 
   loadRecipesBySearch = async (search: string) => {
-    if (!this.recipesManagersBySearch.has(search)) {
-      this.recipesManagersBySearch.set(search, new RecipesLoadManager());
-    }
-    const recipesManager = this.recipesManagersBySearch.get(search)!;
-    if (recipesManager.isLoading) return;
-    recipesManager.isLoading = true;
+    if (this.searchRecipesManager.isLoading) return;
+    this.searchRecipesManager.isLoading = true;
 
     try {
-      const pageToken = recipesManager.nextPageToken;
+      const pageToken = this.searchRecipesManager.nextPageToken;
       const params = { q: search, pageToken };
       const { recipes, nextPageToken } = await api.loadRecipesBySearch(params);
-      if (nextPageToken) {
-        recipesManager.nextPageToken = nextPageToken;
-      }
-      recipesManager.recipes.push(...recipes);
+      this.searchRecipesManager.nextPageToken = nextPageToken;
+      this.searchRecipesManager.recipes.push(...recipes);
       recipes.forEach(recipe => this.recipesById.set(recipe.id, recipe));
     } catch (err) {}
 
-    recipesManager.isLoading = false;
+    this.searchRecipesManager.isLoading = false;
   };
 
   loadRecipeById = async (id: string) => {
@@ -162,7 +160,7 @@ export class RecipeStore {
 
 decorate(RecipeStore, {
   // Latest recipes
-  latestRecipesMgr: observable,
+  latestRecipesManager: observable,
   // Recipes by label
   recipesManagersByLabel: observable,
   // Favorites

@@ -77,7 +77,7 @@ export async function loadRecipesByLabels(
 export async function loadRecipesBySearch(
   parameters: LoadRecipesBySearchParameters
 ): Promise<LoadRecipesResponse> {
-  const apiParameters = { ...parameters, maxResults: 20, fetchImages: true };
+  const apiParameters = { ...parameters, maxResults: 100, fetchImages: true };
   const res = await api.get<GetPostsResponse>('posts/search', apiParameters);
 
   const posts = res.data ? res.data.items : [];
