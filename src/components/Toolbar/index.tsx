@@ -1,7 +1,8 @@
 import * as React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import withRoot from '../../withRoot';
 
@@ -9,25 +10,33 @@ import styles from './styles.module.css';
 
 export interface Props {
   onMenuClick: () => void;
+  title: string;
 }
 
 class ToolbarComponent extends React.Component<Props, {}> {
   render() {
-    const { onMenuClick } = this.props;
+    const { onMenuClick, title } = this.props;
     return (
       <AppBar position="sticky">
         <Toolbar>
           <span className={styles.left}>
             <img src="/foodwishes_logo.png" width="90" />
           </span>
-          <IconButton
-            className={styles.menuButton}
-            onClick={onMenuClick}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <MenuIcon />
-          </IconButton>
+          <span className={styles.center}>
+            <Typography variant="h6" style={{ color: 'white' }}>
+              {title}
+            </Typography>
+          </span>
+          <span className={styles.right}>
+            <IconButton
+              className={styles.menuButton}
+              onClick={onMenuClick}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <MenuIcon />
+            </IconButton>
+          </span>
         </Toolbar>
       </AppBar>
     );

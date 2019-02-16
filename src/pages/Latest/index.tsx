@@ -21,7 +21,7 @@ class LatestPage extends React.Component<Props, State> {
     const loadMore = () => recipeStore.loadLatestRecipes();
 
     return (
-      <PageWrapper>
+      <PageWrapper title="Latest">
         <RecipeList
           recipes={recipes}
           isLoading={isLoading}

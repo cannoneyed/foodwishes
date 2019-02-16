@@ -46,11 +46,10 @@ class ByLabelPage extends React.Component<Props, State> {
     const canLoadMore = recipesManager ? recipesManager.canLoadMore : false;
     const loadMore = () => recipeStore.loadRecipesByLabel(labels);
 
+    const pageTitle = `${labels} Recipes`;
+
     return (
-      <PageWrapper>
-        <div className={styles.title}>
-          <Typography variant="h6">{labels} Recipes</Typography>
-        </div>
+      <PageWrapper title={pageTitle}>
         <RecipeList
           recipes={recipes}
           isLoading={isLoading}

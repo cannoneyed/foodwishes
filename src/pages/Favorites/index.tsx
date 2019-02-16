@@ -13,7 +13,7 @@ class FavoritesPage extends React.Component<Props, State> {
     const recipes = recipeStore.getFavorites();
 
     return (
-      <PageWrapper>
+      <PageWrapper title="Favorites">
         <RecipeList recipes={recipes} />
       </PageWrapper>
     );

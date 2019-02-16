@@ -17,9 +17,8 @@ export interface State {}
 class CategoriesPage extends React.Component<Props, State> {
   render() {
     return (
-      <PageWrapper>
+      <PageWrapper title="Categories">
         <Card className={styles.card}>
-          <CardHeader title="Categories" />
           <CardContent>
             {categories.map(category => {
               const handleChipClick = (event: React.MouseEvent) => {

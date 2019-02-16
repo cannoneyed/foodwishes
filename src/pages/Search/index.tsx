@@ -33,7 +33,7 @@ class SearchPage extends React.Component<Props, State> {
 
   render() {
     return (
-      <PageWrapper>
+      <PageWrapper title="Search">
         <Card className={styles.card}>
           <CardContent>
             <div className={styles.searchCard}>

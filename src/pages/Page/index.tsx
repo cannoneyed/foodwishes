@@ -9,6 +9,7 @@ import styles from './styles.module.css';
 
 export interface Props {
   children: React.ReactNode;
+  title: string;
 }
 export interface State {
   drawerOpen: boolean;
@@ -24,10 +25,10 @@ class PageWrapper extends React.Component<Props, State> {
   };
 
   render() {
-    const { children } = this.props;
+    const { children, title } = this.props;
     return (
       <div className={styles.root}>
-        <Toolbar onMenuClick={() => this.toggleDrawer(true)} />
+        <Toolbar title={title} onMenuClick={() => this.toggleDrawer(true)} />
         <div className={styles.container}>{children}</div>
         <Drawer
           anchor="right"

@@ -3,8 +3,21 @@
 }
 
 .left {
+  display: flex;
   align-items: center;
+}
+
+.center {
   flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  margin-left: 42px;
 }
 
 .menuButton {

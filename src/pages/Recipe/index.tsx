@@ -24,7 +24,7 @@ class HomePage extends React.Component<Props, State> {
   render() {
     const { recipeId } = this.props.match.params;
     const recipe = recipeStore.recipesById.get(recipeId);
-    return <PageWrapper>{recipe && <Recipe recipe={recipe} />}</PageWrapper>;
+    return <PageWrapper title="">{recipe && <Recipe recipe={recipe} />}</PageWrapper>;
   }
 }
 
