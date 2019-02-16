@@ -20,6 +20,26 @@ export interface Recipe {
   updated: Date;
 }
 
+export function deserializeRecipe(parsed: any): Recipe {
+  return {
+    completeRecipeLink: parsed.completeRecipeLink,
+    description: parsed.description,
+    directions: parsed.directions,
+    images: parsed.images,
+    imagesLow: parsed.imagesLow,
+    videoSrc: parsed.videoSrc,
+    rawContent: parsed.rawContent,
+    id: parsed.id,
+    image: parsed.image,
+    imageLow: parsed.imageLow,
+    labels: parsed.labels,
+    published: new Date(parsed.published),
+    replies: parsed.replies,
+    title: parsed.title,
+    updated: new Date(parsed.updated),
+  };
+}
+
 export function processPosts(posts: Post[]): Recipe[] {
   const recipes: (Recipe | undefined)[] = posts
     .filter(post => {

@@ -1,7 +1,7 @@
 {
-  "name": "create-react-app-with-typescript",
+  "name": "foodwishes",
   "version": "3.2.2",
-  "private": true,
+  "private": false,
   "main": "src/index.tsx",
   "dependencies": {
     "@material-ui/core": "latest",
@@ -16,7 +16,6 @@
     "mobx-react": "^5.4.3",
     "react": "latest",
     "react-dom": "latest",
-    "react-infinite": "^0.13.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "latest"
   },

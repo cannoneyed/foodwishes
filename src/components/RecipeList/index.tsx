@@ -12,12 +12,18 @@ import styles from './styles.module.css';
 
 export interface Props {
   recipes: Recipe[];
-  isLoading: boolean;
-  loadMore: () => {};
-  canLoadMore: boolean;
+  isLoading?: boolean;
+  loadMore?: () => void;
+  canLoadMore?: boolean;
 }
 
 class RecipeList extends React.Component<Props, {}> {
+  static defaultProps = {
+    isLoading: false,
+    loadMore: () => {},
+    canLoadMore: false,
+  };
+
   render() {
     const { canLoadMore, isLoading, loadMore, recipes } = this.props;
     return (
@@ -29,7 +35,7 @@ class RecipeList extends React.Component<Props, {}> {
         ))}
         {canLoadMore && (
           <div className={styles.loadMoreContainer}>
-            <Fab color="primary" variant="extended" aria-label="More" onClick={() => loadMore()}>
+            <Fab color="primary" variant="extended" aria-label="More" onClick={() => loadMore!()}>
               {isLoading ? (
                 <span className={styles.loadButton}>
                   <CircularProgress style={{ color: 'white' }} size={30} thickness={4} />
