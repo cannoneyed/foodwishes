@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import withRoot from '../../withRoot';
+import { BASENAME } from '../../core/config';
 
 import styles from './styles.module.css';
 
@@ -20,7 +21,7 @@ class ToolbarComponent extends React.Component<Props, {}> {
       <AppBar position="sticky">
         <Toolbar>
           <span className={styles.left}>
-            <img src="/foodwishes_logo.png" width="90" />
+            <img src={`${BASENAME}/foodwishes_logo.png`} width="90" />
           </span>
           <span className={styles.center}>
             <Typography variant="h6" style={{ color: 'white' }}>

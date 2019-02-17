@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BASENAME } from './core/config';
 
 import ByLabel from './pages/ByLabel';
 import Categories from './pages/Categories';
@@ -8,8 +9,6 @@ import Favorites from './pages/Favorites';
 import Latest from './pages/Latest';
 import Recipe from './pages/Recipe';
 import Search from './pages/Search';
-
-const BASENAME = process.env.NODE_ENV === 'production' ? '/foodwishes' : '/';
 
 const App = () => {
   return (
