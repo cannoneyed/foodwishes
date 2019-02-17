@@ -9,9 +9,11 @@ import Latest from './pages/Latest';
 import Recipe from './pages/Recipe';
 import Search from './pages/Search';
 
+const BASENAME = process.env.NODE_ENV === 'production' ? '/foodwishes' : '/';
+
 const App = () => {
   return (
-    <Router>
+    <Router basename={BASENAME}>
       <Switch>
         <Route exact path="/" component={Latest} />
         <Route exact path="/categories" component={Categories} />
