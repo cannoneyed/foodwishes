@@ -8,6 +8,10 @@
   padding-bottom: 0;
 }
 
+.cardContent {
+  padding-top: 0px !important;
+}
+
 .chips {
   margin-bottom: 20px;
   margin-left: -5px;

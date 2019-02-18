@@ -88,7 +88,7 @@ class FullRecipe extends React.Component<Props, {}> {
           title={this.renderTitle(recipe.title)}
           subheader={this.formatDate(recipe.published)}
         />
-        <CardContent>
+        <CardContent className={styles.cardContent}>
           {this.renderChips()}
           {this.renderVideo()}
         </CardContent>
