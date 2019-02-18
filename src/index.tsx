@@ -12,7 +12,7 @@ import Search from './pages/Search';
 
 const App = () => {
   return (
-    <Router basename={BASENAME}>
+    <Router basename={`${BASENAME}/`}>
       <Switch>
         <Route exact path="/" component={Latest} />
         <Route exact path="/categories" component={Categories} />
