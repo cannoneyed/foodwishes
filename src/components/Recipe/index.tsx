@@ -9,10 +9,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import withRoot from '../../withRoot';
 import { Recipe } from '../../core/recipe';
+
+import Favorite from '../Favorite';
 
 import styles from './styles.module.css';
 
@@ -84,11 +84,7 @@ class FullRecipe extends React.Component<Props, {}> {
       <Card className={styles.card}>
         <CardHeader
           className={styles.header}
-          action={
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-          }
+          action={<Favorite recipe={recipe} />}
           title={this.renderTitle(recipe.title)}
           subheader={this.formatDate(recipe.published)}
         />

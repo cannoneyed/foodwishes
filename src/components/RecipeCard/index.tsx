@@ -7,12 +7,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocalDiningIcon from '@material-ui/icons/LocalDining';
-import withRoot from '../../withRoot';
 import { Recipe } from '../../core/recipe';
-import { recipeStore } from '../../core/recipes';
+
+import Favorite from '../Favorite';
 
 import styles from './styles.module.css';
 
@@ -69,17 +67,10 @@ class RecipeCard extends React.Component<Props, {}> {
 
   render() {
     const { recipe } = this.props;
-    const { isFavorited, toggleFavorite } = recipeStore;
-    const handleFavoriteClick = () => toggleFavorite(recipe);
-
     return (
       <Card className={styles.card}>
         <CardHeader
-          action={
-            <IconButton aria-label="Add to favorites" onClick={handleFavoriteClick}>
-              <FavoriteIcon color={isFavorited(recipe) ? 'primary' : 'disabled'} />
-            </IconButton>
-          }
+          action={<Favorite recipe={recipe} />}
           title={this.renderTitle(recipe.title)}
           subheader={this.formatDate(recipe.published)}
         />
@@ -98,4 +89,4 @@ class RecipeCard extends React.Component<Props, {}> {
   }
 }
 
-export default withRouter(withRoot(observer(RecipeCard)));
+export default withRouter(observer(RecipeCard));
