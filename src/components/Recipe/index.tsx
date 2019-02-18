@@ -21,6 +21,10 @@ export interface Props extends RouteComponentProps {
 }
 
 class FullRecipe extends React.Component<Props, {}> {
+  componentDidMount() {
+    window.scrollTo(0, 0);
+  }
+
   formatDate = (date: Date) => {
     return date.toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' });
   };
