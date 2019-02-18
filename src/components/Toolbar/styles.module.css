@@ -1,5 +1,5 @@
-.root {
-  flex-grow: 1;
+.toolbar {
+  min-height: 1px !important;
 }
 
 .left {

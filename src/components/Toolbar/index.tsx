@@ -19,7 +19,7 @@ class ToolbarComponent extends React.Component<Props, {}> {
     const { onMenuClick, title } = this.props;
     return (
       <AppBar position="sticky">
-        <Toolbar>
+        <Toolbar className={styles.toolbar}>
           <span className={styles.left}>
             <img src={`${BASENAME}/foodwishes_logo.png`} width="90" />
           </span>
