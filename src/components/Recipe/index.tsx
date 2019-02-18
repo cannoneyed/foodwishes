@@ -59,14 +59,18 @@ class FullRecipe extends React.Component<Props, {}> {
   renderVideo() {
     const { recipe } = this.props;
     return (
-      <iframe
-        width="560"
-        height="315"
-        src={`${recipe.videoSrc}?rel=0`}
-        allow="autoplay; encrypted-media"
-        frameBorder="0"
-        allowFullScreen
-      />
+      <div className={styles.resizableVideo}>
+        <div>
+          <iframe
+            width="560"
+            height="315"
+            src={`${recipe.videoSrc}?rel=0`}
+            allow="autoplay; encrypted-media"
+            frameBorder="0"
+            allowFullScreen
+          />
+        </div>
+      </div>
     );
   }
 
