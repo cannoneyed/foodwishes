@@ -38,7 +38,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "yarn build && gh-pages -d build"
+    "add-domain": "echo \"foodwishes.app\" > build/CNAME",
+    "deploy": "yarn build && yarn add-domain && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,5 +53,5 @@
   "resolutions": {
     "terser": "3.14.1"
   },
-  "homepage": "."
+  "homepage": "https://foodwishes.app"
 }
