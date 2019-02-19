@@ -38,8 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "add-domain": "echo \"foodwishes.app\" > build/CNAME",
-    "deploy": "yarn build && yarn add-domain && gh-pages -d build"
+    "deploy": "yarn build && node deploy.js"
   },
   "eslintConfig": {
     "extends": "react-app"
