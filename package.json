@@ -1,8 +1,9 @@
 {
   "name": "foodwishes",
-  "version": "3.2.2",
+  "version": "1.0.1",
   "private": false,
   "main": "src/index.tsx",
+  "license": "MIT",
   "dependencies": {
     "@material-ui/core": "latest",
     "@material-ui/icons": "^3.0.2",
